@@ -93,7 +93,7 @@
 红队可能会使用很多工具，但是让我们来讨论些最核心的工具。请记住，作为一个红队成员，我们的目的不是破坏环境(虽然这是最有趣的)，而是要复制现实世界的攻击，以查看客户是否受到保护，并可以在很短的时间内检测到攻击。在前面的章节中，我们了解了如何从其他 APT 组织那里复制攻击者的概要文件和工具集，所以让我们回顾一下一些最常见的红队工具。
 
 ### Metasploit 框架
-本书不会像前几本书那样深入探讨 Metasploit。尽管 [Metasploit 框架](https://github.com/rapid7/metasploit-framework/commits/master)最初是从 2003 年开发的，但它现在仍然是一个非常棒的工具。这是由于最初的开发者 H.D. Moore 和非常活跃的社区为它提供持续支持。这个社区驱动的框架，似乎每天更新，拥有所有最新的公开漏洞的利用、后渗透利用模块、辅助模块等等。
+本书不会像前几本书那样深入探讨 Metasploit。尽管 [Metasploit 框架](https://github.com/rapid7/metasploit-framework)最初是从 2003 年开发的，但它现在仍然是一个非常棒的工具。这是由于最初的开发者 H.D. Moore 和非常活跃的社区为它提供持续支持。这个社区驱动的框架，似乎每天更新，拥有所有最新的公开漏洞的利用、后渗透利用模块、辅助模块等等。
 
 对于红队项目，我们可能使用 Metasploit 通过[MS17-010永恒之蓝漏洞](http://bit.ly/2H2PTsI)危害内部系统，以获得我们的第一个内网 shell,或者我们可能使用 Metasploit 为我们的社会工程攻击生成一个 Meterpreter payload。 
 
@@ -115,16 +115,16 @@ msfvenom -payload windows/x64/meterpreter_reverse_http -format psh -out meterpre
 最后，在本书的后面部分，我们将讨论如何重新编译利用 Metasploit/Meterpreter 来绕过基于主机和网络的检测工具。
 
 ### Cobalt Strike
-Cobalt Strike 是迄今为止我最喜欢的红队模拟工具之一。什么是 Cobalt Strike 呢？它是一种用来后期持久渗透，横向移动，流量隐藏、数据窃取的工具。 Cobalt Strike 并没有直接的漏洞利用，也没有通过最新的 0-Day 漏洞来破坏系统。当你已经在服务器上执行了 CS 的恶意代码或者将 CS 用作网络钓鱼活动的一部分时，你就能感受到 CS 的功能是多么广泛并且强大。 一旦你可以在机器上执行 Cobalt Strike 的 payload，它创建一个 Beacon(远控木马功能)连接回连到 C2 服务器（teamserver）。
+Cobalt Strike 是迄今为止我最喜欢的红队模拟工具之一。Cobalt Strike 是什么呢？它是一种用来后期持久渗透、横向移动、流量隐藏和数据窃取的工具。 Cobalt Strike 并没有直接的漏洞利用，也没有通过最新的 0-Day 漏洞来破坏系统。当你已经在服务器上执行了 CS 的恶意代码或者将 CS 用作网络钓鱼活动的一部分时，你就能感受到 CS 的功能是多么广泛并且强大。 一旦你可以在机器上执行 Cobalt Strike 的 payload，它创建一个 Beacon(远控木马功能)连接回连到 C2 服务器（teamserver）。
 
-新的 Cobalt Strike 许可证的费用为3500美元(单用户一年)，所以它并不是一个便宜工具。 不过该软件有免费的限量试用版。
+新的 Cobalt Strike 许可证的费用为3500美元(单用户/年)，所以它并不是一个便宜工具。 不过该软件有免费的限量试用版。
 
 #### Cobalt Strike 基础设施
 正如上文所述，在基础设施方面，我们希望设置这样一个可重用且高度灵活的环境。Cobalt Strike 支持重定向，当你的 Cobalt Strike 使用的 C2 域名被销毁了，你不需要创建并启用一个新的环境，只需要替换一个新的 C2 域名。你可以在这里找到更多的使用 socat 配置这些重定向器的信息：[链接1](http://bit.ly/2qxCbCZ)  &  [链接2](http://bit.ly/2IUc4Oe)
 
 <img src="../images/chapter_1/1-6.PNG" width = "420" height = "270" alt="图片名称" align=center />
 
-为了使你更好的重定向，我们可以使用域名前置（域名幌子）。域名前置是使用其他的域名和基础设施的技术作为控制器重定向的技术集合([参考链接](http://bit.ly/2GYw55A))。这可以通过使用流行的内容分发网络(CDNs)来实现，如亚马逊云的 CloudFront 或其他的 Google Hosts 来隐蔽我们的流量源。这在过去曾被不同的攻击者所利用过([参考链接](http://bit.ly/2HoCRFi))。
+为了使你更好的重定向，我们可以使用域名前置（域名幌子）。域名前置是使用其他的域名和基础设施的技术作为控制器重定向的技术集合([参考链接](http://bit.ly/2GYw55A))。这可以通过使用流行的内容分发网络(CDNs)来实现，如亚马逊云的 CloudFront 或者比如 Google Hosts 来隐蔽我们的流量源。这在过去曾被不同的攻击者所利用过([参考链接](http://bit.ly/2HoCRFi))。
 
 通过使用这些高信誉域名，无论 HTTP 或 HTTPS 的任何流量，看起来都像是它正在与这些域通信，而不是与我们的恶意 C2 服务器通信。这一切是如何运作的？用一个比较抽象的例子来说，你的所有流量将被发送到 CloudFront 的一个主要完全限定域名(FQDNs)，例如 a0.awsstatic.com，它是 CloudFront 的主要域名。修改请求中的主机 header 将把所有流量重定向到我们的 CloudFront 分发(CloudFront distribution)，后者最终会将流量转发到我们的 Cobalt Strike C2服务器上([参考链接](http://bit.ly/2GYw55A))。
 
@@ -133,36 +133,36 @@ Cobalt Strike 是迄今为止我最喜欢的红队模拟工具之一。什么是
 通过更改 HTTP 主机的 header，CDN 将很轻松的的的地把流量传输回到正确的服务器。红队一直使用这种技术通过使用高信誉域名来隐藏 C2 服务器的流量。
 
 **另外两个支持域名前置的两个不同公司的优秀资源**：
-- CyberArk 还写了一篇很好的博客文章，在[文章](http://bit.ly/2Hn7RW4)里他介绍了如何使用谷歌的应用产品来使你的流量看起来是流经了 www.google.com, mail.google.com 或者 docs.google.com.
-- Vincent Yiu 写了一篇关于如何使用阿里巴巴 CDN 来支持自己的域名前置攻击的[文章](http://bit.ly/2HjM3eH)。
+- CyberArk 还写了一篇很好的博客文章，在[文章](http://bit.ly/2Hn7RW4)里他介绍了如何使用谷歌的应用产品来使你的流量看起来是流经了 www.google.com, mail.google.com 或者 docs.google.com
+- Vincent Yiu 写了一篇关于如何使用阿里云 CDN 来支持自己的域名前置攻击的[文章](http://bit.ly/2HjM3eH)。
 - Cobalt Strike 不是唯一可以支持域名前置的工具，也可以通过 Meterpreter 来完成([参考链接](https://2rot13.wordpress.com/2018/01/03/domain-fronting-with-meterpreter/))。 
 
 > 注:在本书出版时，AWS(甚至谷歌云)已经启动实现对域名前置的保护( https://amzn.to/2I6lSry )。这并不能阻止这种类型的攻击，只是需要不同的第三方资源来进行利用。
 
 尽管不是基础架构的一部分，但是我们还是应该要理解 beacon 是如何在内部环境中工作的。在操作安全方面，我们应该避免建立会被轻易发现并清除的持久连接。作为一名红队成员，我们必须假设我们的一些客户端是会被蓝队发现的。如果我们让所有的主机都与一个或两个 C2 服务器通信，蓝队很容易就可以把整个基础设施连根拔除。幸运的是，Cobalt Strike 支持内网主机之间使用基于 SMB 的 Beacon 来进行交互。这允许你让一台受感染的计算机与你的 C2 服务器进行正常且合适的 beacon 连接，并使内部网络上的所有其他的服务器通过 SMB 协议与最初受感染的主机进行通信。采用这种连接方式，当蓝队检测到一个二级系统有问题并进行取证分析，他们可能会无法识别与这次攻击相关的 C2 服务器域名。
 
-Cobalt Strike 可以操纵你的 Beacon 通信，这对红队成员来说是一个非常有用的特性。使用自定义 C2 配置文件，你可以让所有来自受感染主机系统的流量看起来和普通流量无异。现在我们会发现越来越多的内网环境中会针对第7层网络应用层进行过滤。很多时候蓝队在这层中找寻那些网络通信中的异常流量，那么我们怎样才能让我们的C2通信变得如同正常的 Web 流量呢？这就是可定制 C2 配置文件发挥作用的地方。看看这个[例子]( https://github.com/rsmudge/Malleable-C2-Profiles/blob/master/normal/amazon.profile)。阅读这个例子，你会看到一些显而易见的信息：
+Cobalt Strike 可以操纵你的 Beacon 通信，这对红队成员来说是一个非常有用的特性。使用自定义 C2 配置文件，你可以让所有来自受感染主机系统的流量看起来和普通流量无异。现在我们会发现在越来越多的内网环境中会针对第7层网络应用层进行过滤。很多时候蓝队在这层中找寻那些网络通信中的异常流量，那么我们怎样才能让我们的C2通信变得如同正常的 Web 流量呢？这就是可定制 C2 配置文件发挥作用的地方。看看这个[例子]( https://github.com/rsmudge/Malleable-C2-Profiles/blob/master/normal/amazon.profile)。阅读这个例子，你会看到一些显而易见的信息：
 
-- 我们可以看出这将会产生带有URI路径的HTTP请求： 
+- 我们可以看出这将会产生带有 URI 路径的 HTTP 请求： 
 
 ```
-set uri “/s/ref=nb_sb_noss_1/167-3294888-0262949/field-keywords=books”;
+set uri "/s/ref=nb_sb_noss_1/167-3294888-0262949/field-keywords=books";
 ```
 
 - 主机 header 设置为 Amazon：
 
 ```
-header “Host” “www.amazon.com”;
+header "Host" "www.amazon.com";
 ```
 
 - 甚至一些自定义服务器的 header 也从 C2 服务器发回：
 
 ```
-header “x-amz-id-1” “THKUYEZKCKPGY5T42PZT”;
-header “x-amz-id-2” “a21yZ2xrNDNtdGRsa212bGV3YW85amZuZW9ydG5rZmRuZ2t
+header "x-amz-id-1" "THKUYEZKCKPGY5T42PZT";
+header "x-amz-id-2" "a21yZ2xrNDNtdGRsa212bGV3YW85amZuZW9ydG5rZmRuZ2t";
 ```
 
-现在很多红队已经在许多不同的活动中使用了这些配置文件，许多安全厂商已经给[所有常见的自定义配置文件](https://github.com/rsmudge/Malleable-C2-Profiles)创建了指纹签名。为了解决这个问题，我们能做的是: 确保修改了配置文件中的所有静态字符串，确保更改了所有 User-Agent 信息，使用真实的证书配置 SSL（不要使用 Cobalt Strike 默认的 SSL 证书），调整抖动率，并更改客户端的的 beacon 时间。 最后一个注意事项是确保通过 POST（http-post）命令进行通信，因为如果不这样做可能会导致使用自定义配置文件时出现很多问题。 如果你的配置文件注明了通过 http-get 进行通信，它仍然有效，但上传大文件将一直被限制。 请记住，GET 请求通常限制在2048个字符以内。
+现在很多红队已经在许多不同的活动中使用了这些配置文件，许多安全厂商已经给[所有常见的自定义配置文件](https://github.com/rsmudge/Malleable-C2-Profiles)创建了指纹签名。为了解决这个问题，我们能做的是: 确保修改了配置文件中的所有静态字符串，确保更改了所有 User-Agent 信息，使用真实的证书配置 SSL（不要使用 Cobalt Strike 默认的 SSL 证书），调整抖动率，并更改客户端的的 beacon 时间。 最后一个注意事项是确保通过 POST（http-post）方法进行通信，因为如果不这样做可能会导致使用自定义配置文件时出现很多问题。 如果你的配置文件注明了通过 http-get 进行通信，它仍然有效，但上传大文件将一直被限制。 请记住，GET 请求通常限制在2048个字符以内。
 
 SpectorOps 安全团队还创建了可定制混淆 C2 配置文件的[项目](https://github.com/bluscreenofjeff/Malleable-C2-Randomizer).
 > 译者注: 这个脚本可以将 Cobalt Strike 的配置文件进行混淆来绕过一些基于签名检测的软件，其原理是将变量替换为提供的字典中的随机字符串，然后输出新的 Malleable C2 配置文件。
@@ -176,7 +176,7 @@ Cobalt Strike 项目有很多贡献者。Aggressor 脚本是一种面向红队�
 例子：HarleyQu1nn 将不同的 Aggressor 脚本放在一个项目中提供给你用于后续漏洞利用： http://bit.ly/2qxIwPE
 
 ### PowerShell Empire
-Empire 是一个后期漏洞利用的框架，包含一个纯 PowerShell2.0 的 Windows 代理和一个纯 Python 2.6/2.7 的 Linux/OS X 代理。它是以前的 PowerShell Empire 和 Python EmPyre 项目的合并。 该框架提供了加密安全通信和灵活的架构。在 PowerShell 方面，Empire 实现了无需 powershell.exe 就可运行 PowerShell 代理的功能。并且 Empire 有很多可以快速部署的后期漏洞利用模块，从键盘记录器到 Mimikatz。Empire 还可以调整通信，躲避网络检测。所有的这些功能都封装在一个以实用性为重点的 [框架]( https://github.com/EmpireProject/Empire)中。
+Empire 是一个后期漏洞利用的框架，包含一个纯 PowerShell2.0 的 Windows 代理和一个纯 Python 2.6/2.7 的 Linux/OS X 代理。它是以前的 PowerShell Empire 和 Python EmPyre 项目的合并。 该框架提供了加密安全通信和灵活的架构。在 PowerShell 方面，Empire 实现了无需 powershell.exe 就可运行 PowerShell 代理的功能。并且 Empire 有很多可以快速部署的后期漏洞利用模块，从键盘记录器到 Mimikatz。Empire 还可以调整通信，躲避网络检测。所有的这些功能都封装在一个以实用性为重点的[框架]( https://github.com/EmpireProject/Empire)中。
 
 对于红队人员来说，PowerShell 是我们最好的朋友之一。在初始化有效 payload 之后，所有随后的攻击都保存在内存中。Empire 最好的地方就是它被开发者积极地维护和更新中，以便你可以使用最新的后期漏洞利用模块进行攻击。 它们还具有适用于 Linux 和 OS X 的 C2 连接。因此，你仍然可以创建基于 MAC 的 Office 宏，当执行之后，在 Empire 中拥有一个全新的代理。
 
@@ -294,7 +294,7 @@ cat /tmp/launcher.bat
 
 <img src="../images/chapter_1/1-9.PNG" width = "600" height = "200" alt="图片名称" align=center />
 
-如你所见，创建的 payload 被严重混淆。 你现在可以把这个 .bat 文件丢到任何 Windows 系统上。 当然，你可能会创建一个 Office 宏文件或一个USB橡皮鸭（注：USB RUBBER DUCKY/USB 橡皮鸭是最早的按键注入工具）的 payload，但这只是众多示例中的一个。
+如你所见，创建的 payload 被严重混淆。 你现在可以把这个 `.bat` 文件丢到任何 Windows 系统上。 当然，你可能会创建一个 Office 宏文件或一个USB橡皮鸭（注：USB RUBBER DUCKY/USB 橡皮鸭是最早的按键注入工具）的 payload，但这只是众多示例中的一个。
 
 如果你尚未在 Kali 图形界面上安装 PowerShell，那么最好的方法是手动安装它。 在 Kali 上安装 PowerShell：
 ```shell
@@ -470,5 +470,5 @@ Merlin 是一个用 GO 编写的工具，外观和感觉类似于 PowerShell Emp
 ## 本章总结
 现在你终于准备开战。你并非像刚开始那样手无寸铁了，你有这些工具和配置过的服务器。好的准备将帮助你绕过包括网络检测工具、网络协议被拦截、基于主机的安全工具在内的任何障碍。
 
-对于本书中的实验，我创建了基于 Kali Linux 的添加了所有工具的完整版虚拟机 -> [点此获取]( http://thehackerplaybook.com/get.php?type=THP-vm)
+对于本书中的实验，我创建了基于 Kali Linux 的添加了所有工具的完整版虚拟机 -> [点此获取](http://thehackerplaybook.com/get.php?type=THP-vm)
 。在 The Hacking Playbook 的存档中，有一个名为 `List_of_Tools.txt` 的文本文件，里面列出了所有添加的工具。虚拟机的默认用户名/密码是 root/toor。
